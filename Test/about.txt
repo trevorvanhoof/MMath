@@ -1,0 +1,10 @@
+Run maya_generate_json.py in Maya to generate these in and out json files
+Then we use rapidjson to parse them and actually run countless of calls to the same functions
+to see if they give results consistent with Maya, we check for average absolute error per element 
+to be below a certain treshold, largely beacuse Maya is double precision and we're not.
+
+Simply
+#define TEST
+in Source.cpp to go into unit-test mode,
+without this define we're building a DLL and with this define we're building a unittext executable
+Should probably split that up in two build targets.
