@@ -66,25 +66,26 @@ Vec VecMaskNormalized(__m128 v, __m128 mask)
 
 extern "C"
 {
-	DLL float Vec4Dot(__m128 a, __m128 b)
+	DLL float Vec4Dot(const __m128 c, const __m128 b)
 	{
+		__m128 a = c;
 		a = _mm_mul_ps(a, b);
 		a = _mm_hadd_ps(a, a);
 		a = _mm_hadd_ps(a, a);
 		return a.m128_f32[0];
 	}
 
-	DLL float Vec4SqrMagnitude(__m128 v)
+	DLL float Vec4SqrMagnitude(const __m128 v)
 	{
 		return Vec4Dot(v, v);
 	}
 
-	DLL float Vec4Magnitude(__m128 v)
+	DLL float Vec4Magnitude(const __m128 v)
 	{
 		return sqrtf(Vec4SqrMagnitude(v));
 	}
 
-	DLL Vec Vec4Normalized(__m128 v, __m128 fallback)
+	DLL Vec Vec4Normalized(const __m128 v, const __m128 fallback)
 	{
 		__m128 a = _mm_mul_ps(v, v);
 		a = _mm_hadd_ps(a, a);
@@ -101,7 +102,7 @@ extern "C"
 #endif
 	}
 
-	DLL Vec Vec4NormalizedUnsafe(__m128 v)
+	DLL Vec Vec4NormalizedUnsafe(const __m128 v)
 	{
 		__m128 a = _mm_mul_ps(v, v);
 		a = _mm_hadd_ps(a, a);
@@ -113,7 +114,7 @@ extern "C"
 		return{ _mm_mul_ps(v, _mm_rsqrt_ps(a)) };
 	}
 
-	DLL Vec Vec4Perpendicular(__m128 v)
+	DLL Vec Vec4Perpendicular(const __m128 v)
 	{
 		// Find a vector at 90 degrees from this vector in any plane this vector lies in, implented from this answer as reference:
 		// https://math.stackexchange.com/questions/133177/finding-a-unit-vector-perpendicular-to-another-vector/413235#413235
@@ -132,13 +133,13 @@ extern "C"
 		return Vec4NormalizedUnsafe(y);
 	}
 	
-	DLL float Vec3Dot(__m128 a, __m128 b) { return VecMaskDot(a, b, F32_VEC3_MASK); }
-	DLL float Vec3SqrMagnitude(__m128 v) { return VecMaskSqrMagnitude(v, F32_VEC3_MASK); }
-	DLL float Vec3Magnitude(__m128 v) { return VecMaskMagnitude(v, F32_VEC3_MASK); }
-	DLL Vec Vec3Normalized(__m128 v, __m128 fallback) { return VecMaskNormalized(v, F32_VEC3_MASK, fallback); }
-	DLL Vec Vec3NormalizedUnsafe(__m128 v) { return VecMaskNormalized(v, F32_VEC3_MASK); }
+	DLL float Vec3Dot(const __m128 a, const __m128 b) { return VecMaskDot(a, b, F32_VEC3_MASK); }
+	DLL float Vec3SqrMagnitude(const __m128 v) { return VecMaskSqrMagnitude(v, F32_VEC3_MASK); }
+	DLL float Vec3Magnitude(const __m128 v) { return VecMaskMagnitude(v, F32_VEC3_MASK); }
+	DLL Vec Vec3Normalized(const __m128 v, const __m128 fallback) { return VecMaskNormalized(v, F32_VEC3_MASK, fallback); }
+	DLL Vec Vec3NormalizedUnsafe(const __m128 v) { return VecMaskNormalized(v, F32_VEC3_MASK); }
 	
-	DLL Vec Vec3Cross(__m128 a, __m128 b)
+	DLL Vec Vec3Cross(const __m128 a, const __m128 b)
 	{
 		__m128 a2 = _mm_swizzle_ps_1203(a);
 		__m128 b2 = _mm_swizzle_ps_1203(b);
@@ -146,7 +147,7 @@ extern "C"
 		return { _mm_mul_ps(v, F32_VEC3_MASK) };
 	}
 
-	DLL Vec Vec3Perpendicular(__m128 v)
+	DLL Vec Vec3Perpendicular(const __m128 v)
 	{
 		// Find a vector at 90 degrees from this vector in any plane this vector lies in, implented from this answer as reference:
 		// https://math.stackexchange.com/questions/133177/finding-a-unit-vector-perpendicular-to-another-vector/413235#413235
@@ -165,13 +166,13 @@ extern "C"
 		return Vec4NormalizedUnsafe(y);
 	}
 
-	DLL float Vec2Dot(__m128 a, __m128 b) { return VecMaskDot(a, b, F32_VEC2_MASK); }
-	DLL float Vec2SqrMagnitude(__m128 v) { return VecMaskSqrMagnitude(v, F32_VEC2_MASK); }
-	DLL float Vec2Magnitude(__m128 v) { return VecMaskMagnitude(v, F32_VEC2_MASK); }
-	DLL Vec Vec2Normalized(__m128 v, __m128 fallback) { return VecMaskNormalized(v, F32_VEC2_MASK, fallback); }
-	DLL Vec Vec2NormalizedUnsafe(__m128 v) { return VecMaskNormalized(v, F32_VEC2_MASK); }
+	DLL float Vec2Dot(const __m128 a, const __m128 b) { return VecMaskDot(a, b, F32_VEC2_MASK); }
+	DLL float Vec2SqrMagnitude(const __m128 v) { return VecMaskSqrMagnitude(v, F32_VEC2_MASK); }
+	DLL float Vec2Magnitude(const __m128 v) { return VecMaskMagnitude(v, F32_VEC2_MASK); }
+	DLL Vec Vec2Normalized(const __m128 v, const __m128 fallback) { return VecMaskNormalized(v, F32_VEC2_MASK, fallback); }
+	DLL Vec Vec2NormalizedUnsafe(const __m128 v) { return VecMaskNormalized(v, F32_VEC2_MASK); }
 
-	DLL float Vec2Cross(__m128 a, __m128 b)
+	DLL float Vec2Cross(const __m128 a, const __m128 b)
 	{
 #if 0
 		return a.m128_f32[0] * b.m128_f32[1] - a.m128_f32[1] * b.m128_f32[0];
@@ -181,7 +182,7 @@ extern "C"
 #endif
 	}
 
-	DLL Vec Vec2Perpendicular(__m128 v)
+	DLL Vec Vec2Perpendicular(const __m128 v)
 	{
 		// Find a vector at 90 degrees from this vector in any plane this vector lies in, implented from this answer as reference:
 		// https://math.stackexchange.com/questions/133177/finding-a-unit-vector-perpendicular-to-another-vector/413235#413235
@@ -208,18 +209,18 @@ extern "C"
 
 extern "C"
 {
-	DLL Vec VecAdd(__m128 lhs, __m128  rhs) { return { _mm_add_ps(lhs, rhs) }; }
-	DLL Vec VecSub(__m128 lhs, __m128 rhs) { return { _mm_sub_ps(lhs, rhs) }; }
-	DLL Vec VecMul(__m128 lhs, __m128 rhs) { return { _mm_mul_ps(lhs, rhs) }; }
-	DLL Vec VecDiv(__m128 lhs, __m128 rhs) { return { _mm_div_ps(lhs, rhs) }; }
-	DLL Vec VecMin(__m128 lhs, __m128 rhs) { return { _mm_min_ps(lhs, rhs) }; }
-	DLL Vec VecMax(__m128 lhs, __m128 rhs) { return { _mm_max_ps(lhs, rhs) }; }
-	DLL Vec VecAbs(__m128 lhs) { return { _mm_abs_ps(lhs) }; }
-	DLL Vec VecSign(__m128 lhs) { return { _mm_sign_ps(lhs) }; }
-	DLL Vec VecNegate(__m128 lhs) { return { _mm_neg_ps(lhs) }; }
-	DLL Vec VecSin(__m128 lhs) { return { _mm_sin_ps(lhs) }; }
-	DLL Vec VecCos(__m128 lhs) { return { _mm_cos_ps(lhs) }; }
-	DLL Vec VecFloor(__m128 lhs) { return { _mm_floor_ps(lhs) }; }
-	DLL Vec VecCeil(__m128 lhs) { return { _mm_ceil_ps(lhs) }; }
-	DLL Vec VecRound(__m128 lhs) { return { _mm_round_ps(lhs, _MM_FROUND_NINT) }; }
+	DLL Vec VecAdd(const __m128 lhs, const __m128  rhs) { return { _mm_add_ps(lhs, rhs) }; }
+	DLL Vec VecSub(const __m128 lhs, const __m128 rhs) { return { _mm_sub_ps(lhs, rhs) }; }
+	DLL Vec VecMul(const __m128 lhs, const __m128 rhs) { return { _mm_mul_ps(lhs, rhs) }; }
+	DLL Vec VecDiv(const __m128 lhs, const __m128 rhs) { return { _mm_div_ps(lhs, rhs) }; }
+	DLL Vec VecMin(const __m128 lhs, const __m128 rhs) { return { _mm_min_ps(lhs, rhs) }; }
+	DLL Vec VecMax(const __m128 lhs, const __m128 rhs) { return { _mm_max_ps(lhs, rhs) }; }
+	DLL Vec VecAbs(const __m128 lhs) { return { _mm_abs_ps(lhs) }; }
+	DLL Vec VecSign(const __m128 lhs) { return { _mm_sign_ps(lhs) }; }
+	DLL Vec VecNegate(const __m128 lhs) { return { _mm_neg_ps(lhs) }; }
+	DLL Vec VecSin(const __m128 lhs) { return { _mm_sin_ps(lhs) }; }
+	DLL Vec VecCos(const __m128 lhs) { return { _mm_cos_ps(lhs) }; }
+	DLL Vec VecFloor(const __m128 lhs) { return { _mm_floor_ps(lhs) }; }
+	DLL Vec VecCeil(const __m128 lhs) { return { _mm_ceil_ps(lhs) }; }
+	DLL Vec VecRound(const __m128 lhs) { return { _mm_round_ps(lhs, _MM_FROUND_NINT) }; }
 }

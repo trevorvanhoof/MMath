@@ -603,32 +603,32 @@ extern "C"
 		return MAT44_IDENTITY;
 	}
 
-	DLL Mat44 Mat44Translate(float x, float y, float z)
+	DLL Mat44 Mat44Translate(const float x, const float y, const float z)
 	{
 		Mat44 m = MAT44_IDENTITY;
 		m.col3 = _mm_set_ps(1.0f, z, y, x);
 		return m;
 	}
 
-	DLL Mat44 Mat44RotateX(float radians)
+	DLL Mat44 Mat44RotateX(const float radians)
 	{
 		float sa = sinf(radians);
 		float ca = cosf(radians);
 		return { F32_UNIT_X, _mm_set_ps(0.0f, sa, ca, 0.0f), _mm_set_ps(0.0f, ca, -sa, 0.0f) , F32_UNIT_W };
 	}
-	DLL Mat44 Mat44RotateY(float radians)
+	DLL Mat44 Mat44RotateY(const float radians)
 	{
 		float sa = sinf(radians);
 		float ca = cosf(radians);
 		return { _mm_set_ps(0.0f, -sa, 0.0f, ca), F32_UNIT_Y, _mm_set_ps(0.0f, ca, 0.0f, sa), F32_UNIT_W };
 	}
-	DLL Mat44 Mat44RotateZ(float radians)
+	DLL Mat44 Mat44RotateZ(const float radians)
 	{
 		float sa = sinf(radians);
 		float ca = cosf(radians);
 		return { _mm_set_ps(0.0f, 0.0f, sa, ca) , _mm_set_ps(0.0f, 0.0f, ca, -sa), F32_UNIT_Z, F32_UNIT_W };
 	}
-	DLL Mat44 Mat44Scale(float x, float y, float z)
+	DLL Mat44 Mat44Scale(const float x, const float y, const float z)
 	{
 		Mat44 m = MAT44_IDENTITY;
 		m.m00 = x;
@@ -636,7 +636,7 @@ extern "C"
 		m.m22 = z;
 		return m;
 	}
-	DLL Mat44 Mat44Scale2(__m128 scale)
+	DLL Mat44 Mat44Scale2(const __m128 scale)
 	{
 		Mat44 m = MAT44_IDENTITY;
 		m.m00 = scale.m128_f32[0];
@@ -644,7 +644,7 @@ extern "C"
 		m.m22 = scale.m128_f32[2];
 		return m;
 	}
-	DLL Mat44 Mat44Mul(Mat44 rhs, Mat44 lhs)
+	DLL Mat44 Mat44Mul(const Mat44 rhs, const Mat44 lhs)
 	{
 		Mat44 m;
 
@@ -670,51 +670,52 @@ extern "C"
 
 		return m;
 	}
-	DLL Mat44 Mat44Rotate(float radiansX, float radiansY, float radiansZ, ERotateOrder rotateOrder)
+	DLL Mat44 Mat44Rotate(const float radiansX, const float radiansY, const float radiansZ, const ERotateOrder rotateOrder)
 	{
 		// TODO: we can probably optimize this, even if it's just a giant switch statement with all the operations inlined & hoping that that results in better compiler optimization
 		Mat44 rotations[] = { Mat44RotateX(radiansX), Mat44RotateY(radiansY), Mat44RotateZ(radiansZ) };
 		int ro = (int)rotateOrder;
 		return Mat44Mul(Mat44Mul(rotations[(ro >> 4)], rotations[(ro >> 2) & 0b11]), rotations[ro & 0b11]);
 	}
-	DLL Mat44 Mat44Rotate2(__m128 radians, ERotateOrder rotateOrder)
+	DLL Mat44 Mat44Rotate2(const __m128 radians, const ERotateOrder rotateOrder)
 	{
 		// overloads for Mat44Rotate
 		return Mat44Rotate(radians.m128_f32[0], radians.m128_f32[1], radians.m128_f32[2], rotateOrder);
 	}
-	DLL Mat44 EulerToMat44(__m128 radians, ERotateOrder rotateOrder)
+	DLL Mat44 EulerToMat44(const __m128 radians, const ERotateOrder rotateOrder)
 	{
 		// alias for Mat44Rotate2
 		return Mat44Rotate(radians.m128_f32[0], radians.m128_f32[1], radians.m128_f32[2], rotateOrder);
 	}
 
 	// general mat44 inverse, use the faster versions if you can, it can save over 60%!
-	DLL Mat44 Mat44Inversed(Mat44 m)
+	DLL Mat44 Mat44Inversed(const Mat44 m)
 	{
 		return GetInverse(m);
 	}
 
 	// assumes matrix is (orthagonal?) transformation matrix, TODO: check shearing
-	DLL Mat44 Mat44InversedFast(Mat44 m)
+	DLL Mat44 Mat44InversedFast(const Mat44 m)
 	{
 		return GetTransformInverse(m);
 	}
 
 	// assumes matrix is orthonormalized
-	DLL Mat44 Mat44InversedFastNoScale(Mat44 m)
+	DLL Mat44 Mat44InversedFastNoScale(const Mat44 m)
 	{
 		return GetTransformInverseNoScale(m);
 	}
-	DLL Mat44 Mat44Transposed(Mat44 m)
+	DLL Mat44 Mat44Transposed(const Mat44 _m)
 	{
+		Mat44 m = _m;
 		_MM_TRANSPOSE4_PS(m.col0, m.col1, m.col2, m.col3);
 		return m;
 	}
-	DLL float Mat44Determinant(Mat44 m)
+	DLL float Mat44Determinant(const Mat44 m)
 	{
 		return Det44(m).m128_f32[0];
 	}
-	DLL Vec Mat44VectorTransform(Mat44 m, __m128 v)
+	DLL Vec Mat44VectorTransform(const Mat44 m, const __m128 v)
 	{
 		// Note: set v.w to 0 to ignore translation
 		return { _mm_add_ps(_mm_add_ps(_mm_mul_ps(m.col0, _mm_swizzle_ps_0(v)),
@@ -724,7 +725,7 @@ extern "C"
 	}
 
 	// TODO: rotate order support
-	DLL Vec Mat44ToEuler(Mat44 m, ERotateOrder ro)
+	DLL Vec Mat44ToEuler(const Mat44 m, const ERotateOrder ro)
 	{
 		/*
 		TODO:
@@ -837,13 +838,13 @@ extern "C"
 #endif
 	}
 
-	static inline Mat44 _Mat44AxisAngle(__m128 axis, float cosAngle, float sinAngle)
+	static inline Mat44 _Mat44AxisAngle(const __m128 _axis, const float cosAngle, const float sinAngle)
 	{
 		// Since all kronos' math notations have somehow died this is useless:
 		// https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
 		// Luckily there is a german delphi wiki that wraps GL AND properly copied it's docs
 		// https://wiki.delphigl.com/index.php/glRotate
-		axis = Vec3Normalized(axis, F32_UNIT_X); // this ensures w = 0
+		__m128 axis = Vec3Normalized(_axis, F32_UNIT_X); // this ensures w = 0
 
 		__m128 scaledAxis, sinAxis;
 		Mat44 r;
@@ -877,27 +878,27 @@ extern "C"
 
 		return r;
 	}
-	DLL Mat44 Mat44AxisAngle(__m128 axis, float radians)
+	DLL Mat44 Mat44AxisAngle(const __m128 axis, const float radians)
 	{
 		// https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
 		return _Mat44AxisAngle(axis, cosf(radians), sinf(radians));
 	}
-	DLL Mat44 Mat44Align(__m128 from, __m128 to)
+	DLL Mat44 Mat44Align(const __m128 from, const __m128 to)
 	{
 		__m128 axis = Vec3Cross(from, to);
 		float cosAngle = Vec3Dot(from, to);
 		float sinAngle = sqrtf(1.0f - cosAngle * cosAngle);
 		return _Mat44AxisAngle(axis, cosAngle, sinAngle);
 	}
-	DLL Mat44 Mat44RotateTowards(__m128 from, __m128 to)
+	DLL Mat44 Mat44RotateTowards(const __m128 from, const __m128 to)
 	{
 		// alias for Align
 		return Mat44Align(from, to);
 	}
-	DLL Mat44 Mat44LookAt(__m128 targetDirection, __m128 upDirection, EAxis forwardAxis, EAxis upAxis)
+	DLL Mat44 Mat44LookAt(const __m128 targetDirection, const __m128 _upDirection, const EAxis forwardAxis, const EAxis upAxis)
 	{
-		__m128 right = Vec3Cross(targetDirection, upDirection);
-		upDirection = Vec3Cross(targetDirection, right);
+		__m128 right = Vec3Cross(targetDirection, _upDirection);
+		__m128 upDirection = Vec3Cross(targetDirection, right);
 		Mat44 r;
 		int z = (int)forwardAxis & 0b11;
 		r.cols[z] = ((int)forwardAxis - z != 0) ? _mm_neg_ps(targetDirection) : targetDirection;
@@ -908,35 +909,36 @@ extern "C"
 		r.col3 = F32_UNIT_W;
 		return r;
 	}
-	DLL Mat44 Mat44FromVectors(__m128 c0, __m128 c1, __m128 c2, __m128 translate)
+	DLL Mat44 Mat44FromVectors(const __m128 c0, const __m128 c1, const __m128 c2, const __m128 translate)
 	{
 		return { c0, c1, c2, translate };
 	}
-	DLL Mat44 Mat44ToTop33(Mat44 m)
+	DLL Mat44 Mat44ToTop33(const Mat44 _m)
 	{
+		Mat44 m = _m;
 		// simply set the translation column to UNIT_W
 		m.col3 = F32_UNIT_W;
 		return m;
 	}
 	// TODO: Order of operations are unclear while writing this doc, make sure delta * newParent = m
-	DLL Mat44 Mat44Delta(Mat44 m, Mat44 newParent)
+	DLL Mat44 Mat44Delta(const Mat44 m, const Mat44 newParent)
 	{
 		// Get this matrix in the space of the other, so that multiply newParent yields the input m
 		return Mat44Mul(m, Mat44Inversed(newParent));
 	}
-	DLL Mat44 Mat44TranslateRotate(float x, float y, float z, float radiansX, float radiansY, float radiansZ, ERotateOrder rotateOrder)
+	DLL Mat44 Mat44TranslateRotate(const float x, const float y, const float z, const float radiansX, const float radiansY, const float radiansZ, const ERotateOrder rotateOrder)
 	{
 		Mat44 r = Mat44Rotate(radiansX, radiansY, radiansZ, rotateOrder);
 		r.col3 = _mm_set_ps(1.0f, z, y, x);
 		return r;
 	}
-	DLL Mat44 Mat44TranslateRotate2(__m128 translate, __m128 radians, ERotateOrder rotateOrder)
+	DLL Mat44 Mat44TranslateRotate2(const __m128 translate, const __m128 radians, const ERotateOrder rotateOrder)
 	{
 		Mat44 r = Mat44Rotate2(radians, rotateOrder);
 		r.col3 = _mm_add_ps(_mm_mul_ps(translate, F32_VEC3_MASK), F32_UNIT_W); // translate.w = translate.w * 0 + 1
 		return r;
 	}
-	DLL Mat44 Mat44TRS(float x, float y, float z, float radiansX, float radiansY, float radiansZ, float scaleX, float scaleY, float scaleZ, ERotateOrder rotateOrder)
+	DLL Mat44 Mat44TRS(const float x, const float y, const float z, const float radiansX, const float radiansY, const float radiansZ, const float scaleX, const float scaleY, const float scaleZ, const ERotateOrder rotateOrder)
 	{
 		Mat44 r = Mat44TranslateRotate(x, y, z, radiansX, radiansY, radiansZ, rotateOrder);
 		r.col0 = _mm_mul_ps(r.col0, _mm_set_ps1(scaleX));
@@ -944,7 +946,7 @@ extern "C"
 		r.col2 = _mm_mul_ps(r.col2, _mm_set_ps1(scaleZ));
 		return r;
 	}
-	DLL Mat44 Mat44TRS2(__m128 translate, __m128 radians, __m128 scale, ERotateOrder rotateOrder)
+	DLL Mat44 Mat44TRS2(const __m128 translate, const __m128 radians, const __m128 scale, const ERotateOrder rotateOrder)
 	{
 		Mat44 r = Mat44TranslateRotate2(translate, radians, rotateOrder);
 		r.col0 = _mm_mul_ps(r.col0, _mm_set_ps1(scale.m128_f32[0]));
@@ -952,7 +954,7 @@ extern "C"
 		r.col2 = _mm_mul_ps(r.col2, _mm_set_ps1(scale.m128_f32[2]));
 		return r;
 	}
-	DLL Mat44 Mat44Parented(Mat44 child, Mat44 parent)
+	DLL Mat44 Mat44Parented(const Mat44 child, const Mat44 parent)
 	{
 		// The whole point is that it is an alias of Mat44Mul with the SAME ARGUMENT ORDER and the argument names help remind us how it works
 		return Mat44Mul(child, parent);
@@ -961,7 +963,7 @@ extern "C"
 	// Matrix validation
 	// We return 0 bit if validation passed on check not requested, so basically  if the result is 0 you're good and else you can use the enum to find out what validation failed.
 	static inline bool fequals(float a, float b, float e) { return fabs(a - b) < e; }
-	DLL Mat44ValidationFlags Mat44Validate(Mat44 m, Mat44ValidationFlags flags, float epsilon)
+	DLL Mat44ValidationFlags Mat44Validate(const Mat44 m, const Mat44ValidationFlags flags, const float epsilon)
 	{
 		// check if axes are perpendicular
 		int f = (int)flags;
@@ -1021,8 +1023,9 @@ extern "C"
 
 		return (Mat44ValidationFlags)f;
 	}
-	DLL Mat44 Mat44MakeValid(Mat44 m, Mat44ValidationFlags flags)
+	DLL Mat44 Mat44MakeValid(const Mat44 _m, const Mat44ValidationFlags flags)
 	{
+		Mat44 m = _m;
 		int f = (int)flags;
 
 		if ((f & (int)Mat44ValidationFlags::Orthagonal) != 0)
@@ -1064,7 +1067,7 @@ extern "C"
 
 		return m;
 	}
-	DLL Vec Mat44ToScale(Mat44 m)
+	DLL Vec Mat44ToScale(const Mat44 m)
 	{
 		// decompose scale
 		return { _mm_set_ps(0.0f,
@@ -1072,12 +1075,12 @@ extern "C"
 			Vec3Magnitude(m.col1),
 			Vec3Magnitude(m.col0)) };
 	}
-	DLL Vec Mat44ToTranslate(Mat44 m)
+	DLL Vec Mat44ToTranslate(const Mat44 m)
 	{
 		// decompose translate
 		return { _mm_mul_ps(F32_VEC3_MASK, m.col3) };
 	}
-	DLL Mat44 Mat44Frustum(float left, float right, float bottom, float top, float near, float far)
+	DLL Mat44 Mat44Frustum(const float left, const float right, const float bottom, const float top, const float near, const float far)
 	{
 		float dx = right - left;
 		float dy = top - bottom;
@@ -1087,19 +1090,19 @@ extern "C"
 			(right + left) / dx, (top + bottom) / dy, (far + near) / dz,  -1.0f,
 			0.0f, 0.0f, (2.0f * far * near) / dz, 0.0f };
 	}
-	DLL Mat44 Mat44PerspectiveX(float horizontalFieldOfViewRadians, float aspectRatio, float near, float far)
+	DLL Mat44 Mat44PerspectiveX(const float horizontalFieldOfViewRadians, const float aspectRatio, const float near, const float far)
 	{
 		float halfWidth = tanf(0.5f * horizontalFieldOfViewRadians) * near;
 		float halfHeight = halfWidth / aspectRatio;
 		return Mat44Frustum(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
 	}
-	DLL Mat44 Mat44PerspectiveY(float verticalFieldOfViewRadians, float aspectRatio, float near, float far)
+	DLL Mat44 Mat44PerspectiveY(const float verticalFieldOfViewRadians, const float aspectRatio, const float near, const float far)
 	{
 		float halfHeight = tanf(0.5f * verticalFieldOfViewRadians) * near;
 		float halfWidth = halfHeight * aspectRatio;
 		return Mat44Frustum(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
 	}
-	DLL Mat44 Mat44Orthographic(float left, float right, float top, float bottom, float near, float far)
+	DLL Mat44 Mat44Orthographic(const float left, const float right, const float top, const float bottom, const float near, const float far)
 	{
 		float dx = right - left;
 		float dy = top - bottom;
@@ -1112,7 +1115,7 @@ extern "C"
 			0.0f, 0.0f, -2.0f / dz, 0.0f,
 			x, y, z, 1.0f };
 	}
-	DLL Mat44 Mat44OrthoSymmetric(float width, float height, float near, float far)
+	DLL Mat44 Mat44OrthoSymmetric(const float width, const float height, const float near, const float far)
 	{
 		float dz = far - near;
 		return { width, 0.0f, 0.0f, 0.0f,

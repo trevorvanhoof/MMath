@@ -21,7 +21,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 extern "C"
 {
-	DLL Mat44 QuatToMat44(Quat q)
+	DLL Mat44 QuatToMat44(const Quat q)
 	{
 		Mat44 m;
 #if 1

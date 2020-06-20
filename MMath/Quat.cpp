@@ -26,28 +26,28 @@ extern "C"
 	{
 		return { F32_UNIT_W };
 	}
-	DLL Quat QuatRotateX(float radians)
+	DLL Quat QuatRotateX(const float _radians)
 	{
-		radians *= 0.5f;
+		float radians = _radians * 0.5f;
 		float sa = sinf(radians);
 		float ca = cosf(radians);
 		return { _mm_set_ps(ca, 0.0f, 0.0f, sa) };
 	}
-	DLL Quat QuatRotateY(float radians)
+	DLL Quat QuatRotateY(const float _radians)
 	{
-		radians *= 0.5f;
+		float radians = _radians * 0.5f;
 		float sa = sinf(radians);
 		float ca = cosf(radians);
 		return { _mm_set_ps(ca, 0.0f, sa, 0.0f) };
 	}
-	DLL Quat QuatRotateZ(float radians)
+	DLL Quat QuatRotateZ(const float _radians)
 	{
-		radians *= 0.5f;
+		float radians = _radians * 0.5f;
 		float sa = sinf(radians);
 		float ca = cosf(radians);
 		return { _mm_set_ps(ca, sa, 0.0f, 0.0f) };
 	}
-	DLL Quat QuatMul(Quat lhs, Quat rhs)
+	DLL Quat QuatMul(const Quat lhs, const Quat rhs)
 	{
 #if 0
 		// https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/arithmetic/index.htm
@@ -75,22 +75,22 @@ extern "C"
 		return result;
 #endif
 	}
-	DLL float QuatDot(Quat a, Quat b)
+	DLL float QuatDot(const Quat a, const Quat b)
 	{
 		__m128 tmp = _mm_mul_ps(a.q, b.q);
 		tmp = _mm_hadd_ps(tmp, tmp);
 		tmp = _mm_hadd_ps(tmp, tmp);
 		return tmp.m128_f32[0];
 	}
-	DLL float QuatSqrMagnitude(Quat q)
+	DLL float QuatSqrMagnitude(const Quat q)
 	{
 		return QuatDot(q, q);
 	}
-	DLL float QuatMagnitude(Quat q)
+	DLL float QuatMagnitude(const Quat q)
 	{
 		return sqrtf(QuatSqrMagnitude(q));
 	}
-	DLL Quat QuatNormalized(Quat q, Quat fallback)
+	DLL Quat QuatNormalized(const Quat q, const Quat fallback)
 	{
 		__m128 tmp = _mm_mul_ps(q.q, q.q);
 		tmp = _mm_hadd_ps(tmp, tmp);
@@ -100,15 +100,15 @@ extern "C"
 		return { _mm_div_ps(q.q, _mm_sqrt_ps(tmp)) };
 	}
 	// note, inversion only works on normalized quaternions (though post-normalize is also fine)
-	DLL Quat QuatInversed(Quat q) // also known as conjugate
+	DLL Quat QuatInversed(const Quat q) // also known as conjugate
 	{
 		return { _mm_mul_ps(q.q, F32_SIGNFLIP_1110) };
 	}
-	DLL Quat QuatConjugated(Quat q) // also known as inverse
+	DLL Quat QuatConjugated(const Quat q) // also known as inverse
 	{
 		return QuatInversed(q);
 	}
-	DLL Quat QuatSlerp(Quat l, Quat r, float t)
+	DLL Quat QuatSlerp(const Quat l, const Quat r, const float t)
 	{
 		// TODO: UNTESTED
 		// https://github.com/Autodesk/animx/blob/master/src/internal/Tquaternion.h
@@ -146,7 +146,7 @@ extern "C"
 		return { _mm_add_ps(l.q, _mm_mul_ps(_mm_set_ps1(t), _mm_sub_ps(tmp, l.q))) };
 	}
 	// This w component is copied from v but otherwise ignored
-	DLL Vec QuatVectorTransform(Quat q, __m128 v)
+	DLL Vec QuatVectorTransform(const Quat q, const __m128 v)
 	{
 		// TODO: SIMD?
 		float x = v.m128_f32[0];
@@ -159,7 +159,7 @@ extern "C"
 		) };
 	}
 
-	DLL Vec QuatToEuler(Quat q, ERotateOrder order)
+	DLL Vec QuatToEuler(const Quat q, const ERotateOrder order)
 	{
 		// Any rotate order quaternion decomposition from:
 		// https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/Quaternions.pdf

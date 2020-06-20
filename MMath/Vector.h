@@ -25,30 +25,30 @@ extern "C"
 		operator __m128() { return s; }
 	};
 
-	DLL float Vec4Dot(__m128 a, __m128 b); // Cos(theta) * Magnitude(a) * Magnitude(b) = Dot(a, b), theta = ACos(Dot(a, b)) if a, b ar normalized.
-	DLL float Vec4SqrMagnitude(__m128 v); // Get the squared length of the vector, avoid Magnitude() and sqrt() calls whenever possible.
-	DLL float Vec4Magnitude(__m128 v); // Get the length of the vector.
-	DLL Vec Vec4Normalized(__m128 v, __m128 fallback); // Divide the vector by it's own length. Returns fallback if input is ZERO (to avoid returning NaN or infinity).
-	DLL Vec Vec4NormalizedUnsafe(__m128 v); // This version has no fallback and will return garbage when used on zero-length vectors. Breaks in debug mode to help you spot when that happens.
-	DLL Vec Vec4Perpendicular(__m128 v); // Find a vector at 90 degrees from this vector in any plane this vector lies in
+	DLL float Vec4Dot(const __m128 a, const __m128 b); // Cos(theta) * Magnitude(a) * Magnitude(b) = Dot(a, b), theta = ACos(Dot(a, b)) if a, b ar normalized.
+	DLL float Vec4SqrMagnitude(const __m128 v); // Get the squared length of the vector, avoid Magnitude() and sqrt() calls whenever possible.
+	DLL float Vec4Magnitude(const __m128 v); // Get the length of the vector.
+	DLL Vec Vec4Normalized(const __m128 v, const __m128 fallback); // Divide the vector by it's own length. Returns fallback if input is ZERO (to avoid returning NaN or infinity).
+	DLL Vec Vec4NormalizedUnsafe(const __m128 v); // This version has no fallback and will return garbage when used on zero-length vectors. Breaks in debug mode to help you spot when that happens.
+	DLL Vec Vec4Perpendicular(const __m128 v); // Find a vector at 90 degrees from this vector in any plane this vector lies in
 
 	// As a rule of thumb all Vec3 functions return with w = 0 and assume the input w is garbage
-	DLL float Vec3Dot(__m128 a, __m128 b);
-	DLL Vec Vec3Cross(__m128 a, __m128 b);
-	DLL float Vec3SqrMagnitude(__m128 v);
-	DLL float Vec3Magnitude(__m128 v);
-	DLL Vec Vec3Normalized(__m128 v, __m128 fallback);
-	DLL Vec Vec3NormalizedUnsafe(__m128 v);
-	DLL Vec Vec3Perpendicular(__m128 v); // Find a vector at 90 degrees from this vector in any plane this vector lies in
+	DLL float Vec3Dot(const __m128 a, const __m128 b);
+	DLL Vec Vec3Cross(const __m128 a, const __m128 b);
+	DLL float Vec3SqrMagnitude(const __m128 v);
+	DLL float Vec3Magnitude(const __m128 v);
+	DLL Vec Vec3Normalized(const __m128 v, const __m128 fallback);
+	DLL Vec Vec3NormalizedUnsafe(const __m128 v);
+	DLL Vec Vec3Perpendicular(const __m128 v); // Find a vector at 90 degrees from this vector in any plane this vector lies in
 
 	// As a rule of thumb all Vec2 functions return with zw = 0 and assume the input zw is garbage
-	DLL float Vec2Dot(__m128 a, __m128 b);
-	DLL float Vec2Cross(__m128 a, __m128 b);
-	DLL float Vec2SqrMagnitude(__m128 v);
-	DLL float Vec2Magnitude(__m128 v);
-	DLL Vec Vec2Normalized(__m128 v, __m128 fallback);
-	DLL Vec Vec2NormalizedUnsafe(__m128 v);
-	DLL Vec Vec2Perpendicular(__m128 v); // Find a vector at 90 degrees from this vector in any plane this vector lies in
+	DLL float Vec2Dot(const __m128 a, const __m128 b);
+	DLL float Vec2Cross(const __m128 a, const __m128 b);
+	DLL float Vec2SqrMagnitude(const __m128 v);
+	DLL float Vec2Magnitude(const __m128 v);
+	DLL Vec Vec2Normalized(const __m128 v, const __m128 fallback);
+	DLL Vec Vec2NormalizedUnsafe(const __m128 v);
+	DLL Vec Vec2Perpendicular(const __m128 v); // Find a vector at 90 degrees from this vector in any plane this vector lies in
 }
 
 extern const __m128 F32_VEC2_MASK;

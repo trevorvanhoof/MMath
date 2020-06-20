@@ -41,17 +41,17 @@ extern const Quat QUAT_IDENTITY;
 extern "C"
 {
 	DLL Quat QuatIdentity();
-	DLL Quat QuatRotateX(float radians);
-	DLL Quat QuatRotateY(float radians);
-	DLL Quat QuatRotateZ(float radians);
-	DLL Quat QuatMul(Quat lhs, Quat rhs);
-	DLL float QuatDot(Quat a, Quat b);
-	DLL float QuatSqrMagnitude(Quat q);
-	DLL float QuatMagnitude(Quat q);
-	DLL Quat QuatNormalized(Quat q, Quat fallback);
-	DLL Quat QuatInversed(Quat q); // also known as conjugate
-	DLL Quat QuatConjugated(Quat q); // also known as inverse
-	DLL Quat QuatSlerp(Quat l, Quat r, float t);
-	DLL Vec QuatVectorTransform(Quat q, __m128 v);
-	DLL Vec QuatToEuler(Quat q, ERotateOrder order);
+	DLL Quat QuatRotateX(const float radians);
+	DLL Quat QuatRotateY(const float radians);
+	DLL Quat QuatRotateZ(const float radians);
+	DLL Quat QuatMul(const Quat lhs, const Quat rhs);
+	DLL float QuatDot(const Quat a, const Quat b);
+	DLL float QuatSqrMagnitude(const Quat q);
+	DLL float QuatMagnitude(const Quat q);
+	DLL Quat QuatNormalized(const Quat q, const Quat fallback);
+	DLL Quat QuatInversed(const Quat q); // also known as conjugate
+	DLL Quat QuatConjugated(const Quat q); // also known as inverse
+	DLL Quat QuatSlerp(const Quat l, const Quat r, const float t);
+	DLL Vec QuatVectorTransform(const Quat q, const __m128 v);
+	DLL Vec QuatToEuler(const Quat q, const ERotateOrder order);
 }

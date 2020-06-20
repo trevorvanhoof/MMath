@@ -61,7 +61,7 @@ def _dll():
     global _instance
     if _instance is not None:
         return _instance
-    _instance = ctypes.CDLL(os.path.abspath(os.path.join(os.path.abspath(__file__), r'..\x64\Release\MMath')))
+    _instance = ctypes.CDLL(os.path.abspath(os.path.join(os.path.abspath(__file__), r'..\x64\Debug\MMath.dll')))
     # Mat44.h
     _instance.Mat44Identity.argtypes = tuple()
     _instance.Mat44Identity.restype = Mat44
@@ -113,14 +113,11 @@ def _dll():
     _instance.Mat44Rotate2.restype = Mat44
     _instance.EulerToMat44.argtypes = (Float4, ERotateOrder)
     _instance.EulerToMat44.restype = Mat44
-    _instance.Mat44TranslateRotate.argtypes = (
-        ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ERotateOrder)
+    _instance.Mat44TranslateRotate.argtypes = (ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ERotateOrder)
     _instance.Mat44TranslateRotate.restype = Mat44
     _instance.Mat44TranslateRotate2.argtypes = (Float4, Float4, ERotateOrder)
     _instance.Mat44TranslateRotate2.restype = Mat44
-    _instance.Mat44TRS.argtypes = (
-        ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float,
-        ctypes.c_float, ctypes.c_float, ERotateOrder)
+    _instance.Mat44TRS.argtypes = (ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ERotateOrder)
     _instance.Mat44TRS.restype = Mat44
     _instance.Mat44TRS2.argtypes = (Float4, Float4, Float4, ERotateOrder)
     _instance.Mat44TRS2.restype = Mat44
@@ -134,15 +131,13 @@ def _dll():
     _instance.Mat44ToScale.restype = Float4
     _instance.Mat44ToTranslate.argtypes = (Mat44,)
     _instance.Mat44ToTranslate.restype = Float4
-    _instance.Mat44Frustum.argtypes = (
-        ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float)
+    _instance.Mat44Frustum.argtypes = (ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float)
     _instance.Mat44Frustum.restype = Mat44
     _instance.Mat44PerspectiveX.argtypes = (ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float)
     _instance.Mat44PerspectiveX.restype = Mat44
     _instance.Mat44PerspectiveY.argtypes = (ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float)
     _instance.Mat44PerspectiveY.restype = Mat44
-    _instance.Mat44Orthographic.argtypes = (
-        ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float)
+    _instance.Mat44Orthographic.argtypes = (ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float)
     _instance.Mat44Orthographic.restype = Mat44
     _instance.Mat44OrthoSymmetric.argtypes = (ctypes.c_float, ctypes.c_float, ctypes.c_float, ctypes.c_float)
     _instance.Mat44OrthoSymmetric.restype = Mat44
@@ -260,6 +255,23 @@ class Float4(ctypes.Structure):
     def __str__(self):
         return '%.05f, %.05f, %.05f, %.05f' % tuple(self.m)
 
+    def toTupleXYZ(self):
+        return float(self.m[0]), float(self.m[1]), float(self.m[2])
+
+    def toTuple(self):
+        return float(self.m[0]), float(self.m[1]), float(self.m[2]), float(self.m[3])
+
+    @classmethod
+    def fromValues(cls, *args):
+        instance = cls()
+        for index, arg in enumerate(args):
+            instance.m[index] = arg
+        return instance
+
+    @classmethod
+    def fromScalar(cls, s):
+        return cls((ctypes.c_float * 4)(s, s, s, s))
+
     @property
     def x(self):
         return self.m[0]
@@ -292,16 +304,16 @@ class Float4(ctypes.Structure):
     def w(self, v):
         self.m[3] = v
 
-    def add(self, rhs):
+    def __add__(self, rhs):
         return _dll().VecAdd(self, rhs)
 
-    def sub(self, rhs):
+    def __sub__(self, rhs):
         return _dll().VecSub(self, rhs)
 
-    def mul(self, rhs):
+    def __mul__(self, rhs):
         return _dll().VecMul(self, rhs)
 
-    def div(self, rhs):
+    def __div__(self, rhs):
         return _dll().VecDiv(self, rhs)
 
     def min(self, rhs):
@@ -533,11 +545,15 @@ class Mat44(ctypes.Union):
     def scale2(scale):
         return _dll().Mat44Scale2(scale)
 
-    def mul(self, lhs):
-        return _dll().Mat44Mul(self, lhs)
+    def mul(self, other):
+        return _dll().Mat44Mul(self, other)
 
-    def __mul__(self, lhs):
-        return _dll().Mat44Mul(self, lhs)
+    def __mul__(self, other):
+        return _dll().Mat44Mul(self, other)
+
+    def __imul__(self, other):
+        self.m = (self * other).m
+        return self
 
     def inversed(self):
         return _dll().Mat44Inversed(self)
@@ -705,89 +721,69 @@ class Quat(Float4):
 
 
 class Vec4(Float4):
-    @staticmethod
-    def dot(a, b):
-        return _dll().Vec4Dot(a, b)
+    def dot(self, b):
+        return _dll().Vec4Dot(self, b)
 
-    @staticmethod
-    def sqrMagnitude(v):
-        return _dll().Vec4SqrMagnitude(v)
+    def sqrMagnitude(self):
+        return _dll().Vec4SqrMagnitude(self)
 
-    @staticmethod
-    def magnitude(v):
-        return _dll().Vec4Magnitude(v)
+    def magnitude(self):
+        return _dll().Vec4Magnitude(self)
 
-    @staticmethod
-    def normalized(v, fallback):
-        return _dll().Vec4Normalized(v, fallback)
+    def normalized(self, fallback):
+        return _dll().Vec4Normalized(self, fallback)
 
-    @staticmethod
-    def normalizedUnsafe(v):
-        return _dll().Vec4NormalizedUnsafe(v)
+    def normalizedUnsafe(self):
+        return _dll().Vec4NormalizedUnsafe(self)
 
-    @staticmethod
-    def perpendicular(v):
-        return _dll().Vec4Perpendicular(v)
+    def perpendicular(self):
+        return _dll().Vec4Perpendicular(self)
 
 
 class Vec3(Float4):
-    @staticmethod
-    def dot(a, b):
-        return _dll().Vec3Dot(a, b)
+    def dot(self, b):
+        return _dll().Vec3Dot(self, b)
 
-    @staticmethod
-    def cross(a, b):
-        return _dll().Vec3Cross(a, b)
+    def cross(self, b):
+        return _dll().Vec3Cross(self, b)
 
-    @staticmethod
-    def sqrMagnitude(v):
-        return _dll().Vec3SqrMagnitude(v)
+    def sqrMagnitude(self):
+        return _dll().Vec3SqrMagnitude(self)
 
-    @staticmethod
-    def magnitude(v):
-        return _dll().Vec3Magnitude(v)
+    def magnitude(self):
+        return _dll().Vec3Magnitude(self)
 
-    @staticmethod
-    def normalized(v, fallback):
-        return _dll().Vec3Normalized(v, fallback)
+    def normalized(self, fallback):
+        return _dll().Vec3Normalized(self, fallback)
 
-    @staticmethod
-    def normalizedUnsafe(v):
-        return _dll().Vec3NormalizedUnsafe(v)
+    def normalizedUnsafe(self):
+        return _dll().Vec3NormalizedUnsafe(self)
 
-    @staticmethod
-    def perpendicular(v):
-        return _dll().Vec3Perpendicular(v)
+    def perpendicular(self):
+        return _dll().Vec3Perpendicular(self)
 
 
 class Vec2(Float4):
-    @staticmethod
-    def dot(a, b):
-        return _dll().Vec2Dot(a, b)
+    def dot(self, b):
+        return _dll().Vec2Dot(self, b)
 
-    @staticmethod
-    def cross(a, b):
-        return _dll().Vec2Cross(a, b)
+    def cross(self, b):
+        return _dll().Vec2Cross(self, b)
 
-    @staticmethod
-    def sqrMagnitude(v):
-        return _dll().Vec2SqrMagnitude(v)
+    def sqrMagnitude(self):
+        return _dll().Vec2SqrMagnitude(self)
 
-    @staticmethod
-    def magnitude(v):
-        return _dll().Vec2Magnitude(v)
+    def magnitude(self):
+        return _dll().Vec2Magnitude(self)
 
-    @staticmethod
-    def normalized(v, fallback):
-        return _dll().Vec2Normalized(v, fallback)
+    def normalized(self, fallback):
+        return _dll().Vec2Normalized(self, fallback)
 
-    @staticmethod
-    def normalizedUnsafe(v):
-        return _dll().Vec2NormalizedUnsafe(v)
+    def normalizedUnsafe(self):
+        return _dll().Vec2NormalizedUnsafe(self)
 
-    @staticmethod
-    def perpendicular(v):
-        return _dll().Vec2Perpendicular(v)
+    def perpendicular(self):
+        return _dll().Vec2Perpendicular(self)
 
 
 # print Mat44.TRS(0.5, 1.5, -2.5, 0.0, 3.14159265359 * 0.5, 0.0, 1.0, 2.0, 1.0, ERotateOrder.XYZ)

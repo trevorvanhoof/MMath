@@ -32,19 +32,19 @@ extern "C"
 	DLL extern const float DEG2RAD;
 	DLL extern const float RAD2DEG;
 
-	DLL float Min(float a, float b);
-	DLL float Max(float a, float b);
-	DLL float Clamp(float v, float n, float x);
-	DLL float SignZero(float x);
-	DLL float SignNotZero(float x);
-	DLL float Sqr(float x); // simply multiply by self for easier inlining of stuff like (sqr(acos(x) / y))
-	DLL float Saturate(float x); // Clamp01
-	DLL float Lerp(float a, float b, float t); // Linear interpolate, implemented as: (b-a)*t+a, t remains unclamped so you can lerp beyond the endpoints.
-	DLL float InverseLerp(float a, float b, float v); // solve for t in v = lerp(a, b, t)
-	DLL float AngleDelta(float a, float b); // Get the angle begtween two angles considering the angle wraps around.
-	DLL float Mod(float x, float y); // Mod is implemented using floor() instead of trunc() because I expect -1 % 2 = 1 (not -1), come on standard lib...
-	DLL float LerpAngle(float a, float b, float t); // Linear interpolate, but understand the values wrap around at TAU, can interpolate up to a full circle but not more.
-	DLL float InverseLerpAngle(float a, float b, float t); // solve for t in v = LerpAngle(a, b, t)
+	DLL float Min(const float a, const float b);
+	DLL float Max(const float a, const float b);
+	DLL float Clamp(const float v, const float n, const float x);
+	DLL float SignZero(const float x);
+	DLL float SignNotZero(const float x);
+	DLL float Sqr(const float x); // simply multiply by self for easier inlining of stuff like (sqr(acos(x) / y))
+	DLL float Saturate(const float x); // Clamp01
+	DLL float Lerp(const float a, const float b, const float t); // Linear interpolate, implemented as: (b-a)*t+a, t remains unclamped so you can lerp beyond the endpoints.
+	DLL float InverseLerp(const float a, const float b, const float v); // solve for t in v = lerp(a, b, t)
+	DLL float AngleDelta(const float a, const float b); // Get the angle begtween two angles considering the angle wraps around.
+	DLL float Mod(const float x, const float y); // Mod is implemented using floor() instead of trunc() because I expect -1 % 2 = 1 (not -1), come on standard lib...
+	DLL float LerpAngle(const float a, const float b, const float t); // Linear interpolate, but understand the values wrap around at TAU, can interpolate up to a full circle but not more.
+	DLL float InverseLerpAngle(const float a, const float b, const float t); // solve for t in v = LerpAngle(a, b, t)
 
 	DLL extern const __m128 F32_PI;
 	DLL extern const __m128 F32_HALF_PI;
@@ -52,17 +52,17 @@ extern "C"
 	DLL extern const __m128 F32_DEG2RAD;
 	DLL extern const __m128 F32_RAD2DEG;
 
-	//DLL __m128 Min(__m128 a, __m128 b); // Already exists as _mm_min_ps
-	//DLL __m128 Max(__m128 a, __m128 b); // Already exists as _mm_max_ps
-	DLL Vec VecClamp(__m128 v, __m128 n, __m128 x);
-	DLL Vec VecSignZero(__m128 x);
-	DLL Vec VecSignNotZero(__m128 x);
-	DLL Vec VecSqr(__m128 x); // simply multiply by self for easier inlining of stuff like (sqr(acos(x) / y))
-	DLL Vec VecSaturate(__m128 x); // Clamp01
-	DLL Vec VecLerp(__m128 a, __m128 b, __m128 t); // Linear interpolate, implemented as: (b-a)*t+a, t remains unclamped so you can lerp beyond the endpoints.
-	DLL Vec VecInverseLerp(__m128 a, __m128 b, __m128 v); // solve for t in v = lerp(a, b, t)
-	DLL Vec VecAngleDelta(__m128 a, __m128 b); // Get the angle begtween two angles considering the angle wraps around.
-	DLL Vec VecMod(__m128 x, __m128 y); // Mod is implemented using floor() instead of trunc() because I expect -1 % 2 = 1 (not -1), come on standard lib...
-	DLL Vec VecLerpAngle(__m128 a, __m128 b, __m128 t); // Linear interpolate, but understand the values wrap around at TAU, can interpolate up to a full circle but not more.
-	DLL Vec VecInverseLerpAngle(__m128 a, __m128 b, __m128 t); // solve for t in v = LerpAngle(a, b, t)
+	//DLL Vec Min(const __m128 a, const __m128 b); // Already exists as _mm_min_ps
+	//DLL Vec Max(const __m128 a, const __m128 b); // Already exists as _mm_max_ps
+	DLL Vec VecClamp(const __m128 v, const __m128 n, const __m128 x);
+	DLL Vec VecSignZero(const __m128 x);
+	DLL Vec VecSignNotZero(const __m128 x);
+	DLL Vec VecSqr(const __m128 x); // simply multiply by self for easier inlining of stuff like (sqr(acos(x) / y))
+	DLL Vec VecSaturate(const __m128 x); // Clamp01
+	DLL Vec VecLerp(const __m128 a, const __m128 b, const __m128 t); // Linear interpolate, implemented as: (b-a)*t+a, t remains unclamped so you can lerp beyond the endpoints.
+	DLL Vec VecInverseLerp(const __m128 a, const __m128 b, const __m128 v); // solve for t in v = lerp(a, b, t)
+	DLL Vec VecAngleDelta(const __m128 a, const __m128 b); // Get the angle begtween two angles considering the angle wraps around.
+	DLL Vec VecMod(const __m128 x, const __m128 y); // Mod is implemented using floor() instead of trunc() because I expect -1 % 2 = 1 (not -1), come on standard lib...
+	DLL Vec VecLerpAngle(const __m128 a, const __m128 b, const __m128 t); // Linear interpolate, but understand the values wrap around at TAU, can interpolate up to a full circle but not more.
+	DLL Vec VecInverseLerpAngle(const __m128 a, const __m128 b, const __m128 t); // solve for t in v = LerpAngle(a, b, t)
 }
