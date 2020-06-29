@@ -16,6 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include "Enums.h"
 #include "DLL.h"
 #include "Vector.h"
+#include <cstring>
 
 extern "C"
 {
@@ -52,6 +53,8 @@ extern "C"
 			};
 			float m[16];
 		};
+
+		bool operator==(const Mat44& rhs) { return memcmp(m, rhs.m, sizeof(float) * 16) == 0; }
 	};
 
 	DLL Mat44 Mat44Identity();

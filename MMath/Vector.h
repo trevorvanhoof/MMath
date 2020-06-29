@@ -21,7 +21,14 @@ extern "C"
 	// which hopefully compiles to no unnecessary overhead.
 	__declspec(align(16)) struct Vec
 	{
-		__m128 s;
+		union
+		{
+			__m128 s;
+			struct
+			{
+				float x, y, z, w;
+			};
+		};
 		operator __m128() { return s; }
 	};
 

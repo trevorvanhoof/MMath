@@ -732,6 +732,32 @@ extern "C"
 		There is something off with these results but I'm not sure
 		if the cause is Mat44ToQuat or QuatToEuler
 		*/
+#if 1
+		// https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/index.htm
+		// This is decomposed with ERotateOrder::XZY
+		float heading, attitude, bank;
+		if (ro == ERotateOrder::XZY)
+		{
+			if (m.m01 > 0.998f) // singularity at north pole
+			{
+				heading = atan2f(m.m02, m.m22);
+				attitude = HALF_PI;
+				bank = 0.0f;
+				return { _mm_set_ps(0.0f, attitude, heading, bank) };
+			}
+			if (m.m01 < -0.998f) // singularity at south pole
+			{
+				heading = atan2f(m.m02, m.m22);
+				attitude = -HALF_PI;
+				bank = 0.0f;
+				return { _mm_set_ps(0.0f, attitude, heading, bank) };
+			}
+			heading = atan2f(-m.m02, m.m00);
+			attitude = asinf(m.m01);
+			bank = atan2f(-m.m21, m.m11);
+			return { _mm_set_ps(0.0f, attitude, heading, bank) };
+		}
+#endif
 		Quat q = Mat44ToQuat(m);
 		return QuatToEuler(q, ro);
 #if 0
@@ -808,33 +834,6 @@ extern "C"
 		}
 
 		return _mm_set_ps(0.0f, r[headingIndex], r[pitchIndex], r[rollIndex]);
-#endif
-#if 0
-		// https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/index.htm
-		// This is decomposed with ERotateOrder::XZY
-		float heading, attitude, bank;
-		if (ro == ERotateOrder::XZY)
-		{
-			if (m.m01 > 0.998f) // singularity at north pole
-			{
-				heading = atan2f(m.m02, m.m22);
-				attitude = HALF_PI;
-				bank = 0.0f;
-				return _mm_set_ps(0.0f, attitude, heading, bank);
-			}
-			if (m.m01 < -0.998f) // singularity at south pole
-			{
-				heading = atan2f(m.m02, m.m22);
-				attitude = -HALF_PI;
-				bank = 0.0f;
-				return _mm_set_ps(0.0f, attitude, heading, bank);
-			}
-			heading = atan2f(-m.m02, m.m00);
-			attitude = asinf(m.m01);
-			bank = atan2f(-m.m21, m.m11);
-			return _mm_set_ps(0.0f, attitude, heading, bank);
-		}
-		return F32_ZERO;
 #endif
 	}
 
