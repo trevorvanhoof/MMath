@@ -732,7 +732,7 @@ extern "C"
 		There is something off with these results but I'm not sure
 		if the cause is Mat44ToQuat or QuatToEuler
 		*/
-#if 1
+#if 0
 		// https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/index.htm
 		// This is decomposed with ERotateOrder::XZY
 		float heading, attitude, bank;

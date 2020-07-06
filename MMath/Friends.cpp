@@ -82,48 +82,29 @@ extern "C"
 
 	DLL Quat Mat44ToQuat(Mat44 m)
 	{
-		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
 		float trace = m.m00 + m.m11 + m.m22;
+		float t;
 		__m128 q;
-		float S;
-
-		if (trace > 0)
+		if (trace > 0.0f)
 		{
-			S = (trace + 1.0f);
-			q = _mm_set_ps(
-				S,
-				m.m10 - m.m01,
-				m.m02 - m.m20,
-				m.m21 - m.m12);
+			t = trace;
+			q = _mm_set_ps(t, m.m01 - m.m10, m.m20 - m.m02, m.m12 - m.m21);
 		}
-		else if ((m.m00 > m.m11) & (m.m00 > m.m22))
+		else if (m.m00 > m.m11&& m.m00 > m.m22)
 		{
-			S = (1.0f + m.m00 - m.m11 - m.m22);
-			q = _mm_set_ps(
-				m.m21 - m.m12,
-				m.m02 + m.m20,
-				m.m01 + m.m10,
-				S);
+			t = m.m00 - m.m11 - m.m22 + 1.0f;
+			q = _mm_set_ps(m.m12 - m.m21, m.m20 + m.m02, m.m01 + m.m10, t);
 		}
 		else if (m.m11 > m.m22)
 		{
-			S = (1.0f + m.m11 - m.m00 - m.m22);
-			q = _mm_set_ps(
-				m.m02 - m.m20,
-				m.m12 + m.m21,
-				S,
-				m.m01 + m.m10);
+			t = -m.m00 + m.m11 - m.m22 + 1.0f;
+			q = _mm_set_ps(m.m20 - m.m02, m.m12 + m.m21, t, m.m01 + m.m10);
 		}
 		else
 		{
-			S = (1.0f + m.m22 - m.m00 - m.m11);
-			q = _mm_set_ps(
-				m.m01 - m.m10,
-				S,
-				m.m12 + m.m21,
-				m.m02 + m.m20);
+			t = -m.m00 - m.m11 + m.m22 + 1.0f;
+			q = _mm_set_ps(m.m01 - m.m10, t, m.m12 + m.m21, m.m20 + m.m02);
 		}
-
-		return { _mm_mul_ps(q, _mm_rsqrt_ps(_mm_set_ps1(S + S))) };
+		return { _mm_mul_ps(q, _mm_mul_ps(_mm_set_ps1(0.5f), _mm_rsqrt_ps(_mm_set_ps1(t)))) };
 	}
 }

@@ -3,3 +3,5 @@ x64
 Test/Debug
 MMath/Debug
 *.pyc
+.idea/inspectionProfiles
+.idea

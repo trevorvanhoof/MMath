@@ -107,3 +107,29 @@ extern const __m128 F32_SIGNFLIP_0011;
 extern const __m128 F32_SIGNFLIP_VEC3_100; // multiply with this to get the sign flip and w = 0
 extern const __m128 F32_SIGNFLIP_VEC3_010;
 extern const __m128 F32_SIGNFLIP_VEC3_001;
+
+// For some reason dllexport didn't work so I just add this flag for third party users.
+#ifdef IMPL_CONSTS
+
+// exposed
+const __m128 F32_ZERO = { 0.0f, 0.0f, 0.0f, 0.0f };
+const __m128 F32_ONE = { 1.0f, 1.0f, 1.0f, 1.0f };
+const __m128 F32_NEG_ONE = _mm_set_ps1(-1.0f);
+const __m128 F32_UNIT_X = { 1.0f, 0.0f, 0.0f, 0.0f };
+const __m128 F32_UNIT_Y = { 0.0f, 1.0f, 0.0f, 0.0f };
+const __m128 F32_UNIT_Z = { 0.0f, 0.0f, 1.0f, 0.0f };
+const __m128 F32_UNIT_W = { 0.0f, 0.0f, 0.0f, 1.0f };
+const __m128 F32_UNIT_NEG_X = { -1.0f, 0.0f, 0.0f, 0.0f };
+const __m128 F32_UNIT_NEG_Y = { 0.0f, -1.0f, 0.0f, 0.0f };
+const __m128 F32_UNIT_NEG_Z = { 0.0f, 0.0f, -1.0f, 0.0f };
+const __m128 F32_UNIT_NEG_W = { 0.0f, 0.0f, 0.0f, -1.0f };
+const __m128 F32_SIGNFLIP_0101 = { 1.0f, -1.0f, 1.0f, -1.0f };
+const __m128 F32_SIGNFLIP_0011 = { 1.0f, 1.0f, -1.0f, -1.0f };
+const __m128 F32_SIGNFLIP_0110 = { 1.0f, -1.0f, -1.0f, 1.0f };
+
+// sign flip and zero out w
+const __m128 F32_SIGNFLIP_VEC3_100 = { -1.0f, 1.0f, 1.0f, 0.0f };
+const __m128 F32_SIGNFLIP_VEC3_010 = { 1.0f, -1.0f, 1.0f, 0.0f };
+const __m128 F32_SIGNFLIP_VEC3_001 = { 1.0f, 1.0f, -1.0f, 0.0f };
+
+#endif

@@ -1,8 +1,7 @@
 # TODO
 Unit tests
-- Ensure 100% code coverage
+- Ensure 100% code coverage, currently only testing matrices
 - Do performance metrics by testing tons of randomized inputs
-- Pre-randomize said inputs and use them in another context like Maya, GL or glm so we can immediately use them as test validation
 
 XForm struct
 XFormScale struct
@@ -16,53 +15,10 @@ Quat QuatRotate(x,y,z)
 Quat QuatParent(child,parent) TODO: these inputs must reflect multiplication order, so if child * parent yields world space child we're good, but if that is the opposite we must flip the args
 QuatToAxisAngle
 
-Mat44 Mat44AxisAngle(__m128 axis, float radians); // Rotate around a given vector
-Mat44 Mat44Align(__m128 from, __m128 to); // Construct a matrix so that, when transforming 'from', the result is 'to'. Uses cross & dot to convert to axis-angle scenario.
-Mat44 Mat44RotateTowards alias for Align
-Mat44 Mat44LookAt(__m128 targetDirection, __m128 upDirection, EAxis forward, EAxis upAxis)
-Mat44 Mat44FromVectors(__m128 c0,__m128 c1,__m128 c2,__m128 translate)
-Mat44 Mat44ToTop33(Mat44 m); // simply set the translation column to UNIT_W
-// TODO: Order of operations are unclear while writing this doc, make sure delta * newParent = m
-Mat44 Mat44Delta(Mat44 m, Mat44 newParent) // Get this matrix in the space of the other, so that multiply newParent yields the input m
-Mat44 Mat44Rotate(x,y,z)
-Mat44 Mat44Scale(x,y,z)
-Mat44 Mat44TranslateRotate(x,y,z)
-Mat44 Mat44TRS(x,y,z)
-Mat44 Mat44Parent(child,parent) TODO: these inputs must reflect multiplication order, so if child * parent yields world space child we're good, but if that is the opposite we must flip the args
-Mat44 euler decomposition rotate order support
-Mat44 IsOrthoNormal // useful for throwing warnings
-Mat44 MakeOrthoNormal // useful for rectifying warnings (at the cost of being very slow)
-Mat44 Mat44ToScale // decompose scale
-Mat44 Mat44ToTranslate // decompose translate
-Mat44Frustum
-Mat44PerspectiveX
-Mat44PerspectiveY
-Mat44OrthoSymmetric
-Mat44Orthographic
-Mat44Lerp ? this seems hardly worthwhile and probably just becomes converting to xform, lerping that, and converting back
-
-/*
-These seem relevant if we want to black box the structures
-which may be more relevant when passing pointers around
-but for now I hope we can either copy low level c-style structs
-or somehow share memory so we can pass by const ref everywhere.
-This will get more defined when writing the py and cs wrappers
-
-Mat44 Mat44Column // get single column
-Mat44 Mat44SetColumn // set single column
-Mat44 Mat44Item // get single item from a [0, 16) index
-Mat44 Mat44SetItem // set single item from a [0, 16) index
-Mat44 Mat44Item2 // get single item from col, row index pair
-Mat44 Mat44SetItem2 // set single item from col, row index pair
-Quat QuatItem
-Quat QuatSetItem
-*/
-
-
 # MMath
 MMath - vector math library for 3D applications.
 By Trevor van Hoof.
-Released under the MIT License
+Released under the MIT License:
 
 # License
 Copyright 2020 Trevor van Hoof
@@ -94,7 +50,7 @@ The in-memory representation is this:
 1 0 0 0 0 1 0 0 0 0 1 0 x y z 1
 (so naively inserting newlines results in something that looks transposed)
 
-Mmaa documentation uses 'row-major' notation, so they put line breaks as you might
+Maya documentation uses 'row-major' notation, so they put line breaks as you might
 expect and note a translation matrix as:
 1 0 0 0
 0 1 0 0
@@ -135,6 +91,11 @@ All these routines have been superseded by more elaborate versions (e.g. rotate 
 the original code remains between #if 0 defines so they will not end up in your binary, if you were to use these
 legacy routines you are subject to the GPL2 or GPL3 license.
 
+Perpendicular vector algorithm was implemented as described by Ahmed Fasih here:
+https://math.stackexchange.com/questions/133177/finding-a-unit-vector-perpendicular-to-another-vector/413235#413235
+
+Bidirectional Matrix and Quaternion conversions are referenced from
+
 Some quaternion code was taken from Autodesk's animx library:
 https://github.com/Autodesk/animx/blob/master/src/internal/Tquaternion.h
 The original code is licensed under the Apache 2.0 license
@@ -156,6 +117,3 @@ The original code (after making it compatible with my data structures and compil
 Tquaternion slerp(const Tquaternion& p, const Tquaternion& q, double t)
 Was made to interact with my data structures in order to compile.
 Later a SIMD version was created and the resulting functions retains none of the original code but follows the same algorithm.
-
-Perpendicular vector algorithm was implemented as described by Ahmed Fasih here:
-https://math.stackexchange.com/questions/133177/finding-a-unit-vector-perpendicular-to-another-vector/413235#413235

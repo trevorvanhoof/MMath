@@ -12,7 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 """
 import os
 import ctypes
-import enum
+import menum as enum
 from math import pi as PI
 
 _instance = None
@@ -61,7 +61,7 @@ def _dll():
     global _instance
     if _instance is not None:
         return _instance
-    _instance = ctypes.CDLL(os.path.abspath(os.path.join(os.path.abspath(__file__), r'..\x64\Release\MMath.dll')))
+    _instance = ctypes.WinDLL(os.path.abspath(os.path.join(os.path.abspath(__file__), r'..\x64\Debug\MMath.dll')))
     # Mat44.h
     _instance.Mat44Identity.argtypes = tuple()
     _instance.Mat44Identity.restype = Mat44
@@ -251,6 +251,19 @@ def _dll():
 
 class Float4(ctypes.Structure):
     _fields_ = [('m', ctypes.c_float * 4)]
+
+    def __init__(self, *args):
+        if args:
+            if len(args) == 1:
+                s = args[0]
+                super(Float4, self).__init__((ctypes.c_float * 4)(s, s, s, s))
+            else:
+                m = (ctypes.c_float * 4)()
+                for i, v in enumerate(args):
+                    m[i] = ctypes.c_float(v)
+                super(Float4, self).__init__(m)
+        else:
+            super(Float4, self).__init__(*args)
 
     def __str__(self):
         return '%.05f, %.05f, %.05f, %.05f' % tuple(self.m)

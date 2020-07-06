@@ -68,3 +68,4 @@ extern "C"
 		FourthRow = 0b10000, // when set, check for garbage in the last row, so col[0,1,2].w = 0 and col3.w = 1 = OK
 	};
 }
+

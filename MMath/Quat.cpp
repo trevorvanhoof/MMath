@@ -159,20 +159,15 @@ extern "C"
 		) };
 	}
 
-	DLL Vec QuatToEuler(const Quat q, const ERotateOrder order)
+	Vec QuatToEuler(const Quat q, const ERotateOrder order, float e)
 	{
-		// Any rotate order quaternion decomposition from:
-		// https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/Quaternions.pdf
-
 		int i0 = ((int)order >> 4) & 3;
 		int i1 = ((int)order >> 2) & 3;
 		int i2 = (int)order & 3;
 
 		// swizzle q to match rotate order
-		float p0 = q.w, p1 = q.s[i0], p2 = q.s[i1], p3 = q.s[i2];
+		float p0 = q.s[3], p1 = q.s[i0], p2 = q.s[i1], p3 = q.s[i2];
 
-		static const __m128 AXES[3] = { F32_UNIT_X, F32_UNIT_NEG_Y, F32_UNIT_Z }; // TODO: I had a very narrow test case and found I had to negate Y somehow, neesd more testing.
-		float e = SignNotZero(Vec3Dot(Vec3Cross(AXES[i1], AXES[i2]), AXES[i0]));
 		float sinTheta1 = 2.0f * (p0 * p2 + e * p1 * p3);
 		__m128 result = _mm_setzero_ps();
 		result.m128_f32[i1] = asinf(sinTheta1);
@@ -187,7 +182,21 @@ extern "C"
 		}
 
 		return { result };
+	}
 
+	DLL Vec QuatToEuler(const Quat q, const ERotateOrder order)
+	{
+		// Any rotate order quaternion decomposition from:
+		// https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/Quaternions.pdf
+
+		int i0 = ((int)order >> 4) & 3;
+		int i1 = ((int)order >> 2) & 3;
+		int i2 = (int)order & 3;
+
+		Vec e[3] = { QuatVectorTransform(q, F32_UNIT_X), QuatVectorTransform(q, F32_UNIT_Y), QuatVectorTransform(q, F32_UNIT_Z) };
+		float s = SignNotZero(Vec3Dot(Vec3Cross(e[i1], e[i2]), e[i0]));
+		
+		return QuatToEuler(q, order, s);
 #if 0
 		// https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm
 		// This is decomposed with ERotateOrder::XZY
