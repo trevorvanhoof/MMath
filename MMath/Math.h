@@ -66,3 +66,17 @@ extern "C"
 	DLL Vec VecLerpAngle(const __m128 a, const __m128 b, const __m128 t); // Linear interpolate, but understand the values wrap around at TAU, can interpolate up to a full circle but not more.
 	DLL Vec VecInverseLerpAngle(const __m128 a, const __m128 b, const __m128 t); // solve for t in v = LerpAngle(a, b, t)
 }
+
+#ifdef IMPL_CONSTS
+DLL const float PI = 3.14159265358979323846f;
+DLL const float HALF_PI = PI * 0.5f;
+DLL const float TAU = PI + PI;
+DLL const float DEG2RAD = PI / 180.0f;
+DLL const float RAD2DEG = 180.0f / PI;
+
+DLL const __m128 F32_PI = _mm_set_ps1(3.14159265359f);
+DLL const __m128 F32_HALF_PI = _mm_set_ps1(PI * 0.5f);
+DLL const __m128 F32_TAU = _mm_set_ps1(PI + PI);
+DLL const __m128 F32_DEG2RAD = _mm_set_ps1(PI / 180.0f);
+DLL const __m128 F32_RAD2DEG = _mm_set_ps1(180.0f / PI);
+#endif

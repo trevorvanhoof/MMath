@@ -24,9 +24,9 @@ __forceinline __m128 _mm_shuffle_ps_0101(__m128 vec1, __m128 vec2) { return _mm_
 __forceinline __m128 _mm_shuffle_ps_2323(__m128 vec1, __m128 vec2) { return _mm_movehl_ps(vec2, vec1); }
 
 // Missing vector instructions
-__m128 _mm_abs_ps(__m128 v);
-__m128 _mm_sign_ps(__m128 v);
-__m128 _mm_neg_ps(__m128 v);
+__declspec(dllexport) __m128 _mm_abs_ps(__m128 v);
+__declspec(dllexport) __m128 _mm_sign_ps(__m128 v);
+__declspec(dllexport) __m128 _mm_neg_ps(__m128 v);
 
 // I don't like using #defines so here's a bunch of swizzle functions.
 // Sorry if it slows down compiles, so far it's worked fine!

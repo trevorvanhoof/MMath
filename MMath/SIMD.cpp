@@ -56,9 +56,9 @@ const __m128 F32_COS_COEFF0 = { 2.443315711809948E-005f, 2.443315711809948E-005f
 const __m128 F32_COS_COEFF1 = { -1.388731625493765E-003f, -1.388731625493765E-003f,-1.388731625493765E-003f, -1.388731625493765E-003f };
 const __m128 F32_COS_COEFF2 = { 4.166664568298827E-002f, 4.166664568298827E-002f, 4.166664568298827E-002f, 4.166664568298827E-002f };
 
-__m128 _mm_abs_ps(__m128 v) { return _mm_and_ps(v, F32_UNSIGEND_MASK); }
-__m128 _mm_sign_ps(__m128 v) { return _mm_and_ps(v, F32_SIGN_MASK); }
-__m128 _mm_neg_ps(__m128 v) { return _mm_sub_ps(F32_ZERO, v); }
+__declspec(dllexport) __m128 _mm_abs_ps(__m128 v) { return _mm_and_ps(v, F32_UNSIGEND_MASK); }
+__declspec(dllexport) __m128 _mm_sign_ps(__m128 v) { return _mm_and_ps(v, F32_SIGN_MASK); }
+__declspec(dllexport) __m128 _mm_neg_ps(__m128 v) { return _mm_sub_ps(F32_ZERO, v); }
 
 #if (_MSC_VER < 1920)
 __forceinline __m128 _sin_ps(__m128 x, bool cosine = false)
