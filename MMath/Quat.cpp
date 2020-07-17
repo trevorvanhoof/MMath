@@ -159,7 +159,7 @@ extern "C"
 		) };
 	}
 
-	Vec QuatToEuler(const Quat q, const ERotateOrder order, float e)
+	Vec _QuatToEuler(const Quat q, const ERotateOrder order, float e)
 	{
 		int i0 = ((int)order >> 4) & 3;
 		int i1 = ((int)order >> 2) & 3;
@@ -196,7 +196,7 @@ extern "C"
 		Vec e[3] = { QuatVectorTransform(q, F32_UNIT_X), QuatVectorTransform(q, F32_UNIT_Y), QuatVectorTransform(q, F32_UNIT_Z) };
 		float s = SignNotZero(Vec3Dot(Vec3Cross(e[i1], e[i2]), e[i0]));
 		
-		return QuatToEuler(q, order, s);
+		return _QuatToEuler(q, order, s);
 #if 0
 		// https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm
 		// This is decomposed with ERotateOrder::XZY

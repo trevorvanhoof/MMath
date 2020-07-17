@@ -105,6 +105,6 @@ extern "C"
 			t = -m.m00 - m.m11 + m.m22 + 1.0f;
 			q = _mm_set_ps(m.m01 - m.m10, t, m.m12 + m.m21, m.m20 + m.m02);
 		}
-		return { _mm_mul_ps(q, _mm_mul_ps(_mm_set_ps1(0.5f), _mm_rsqrt_ps(_mm_set_ps1(t)))) };
+		return {Vec4Normalized(_mm_mul_ps(q, _mm_mul_ps(_mm_set_ps1(0.5f), _mm_rsqrt_ps(_mm_set_ps1(t)))), F32_UNIT_W)};
 	}
 }
