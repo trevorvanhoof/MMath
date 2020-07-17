@@ -12,8 +12,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 **/
 #pragma once
 
-#ifndef _WINDLL
-#define DLL __declspec(dllimport)
-#else
+#if defined(_WINLIB) || defined(_WINDLL)
 #define DLL __declspec(dllexport)
+#else
+#ifdef MMATH_STATIC
+#define DLL 
+#else
+#define DLL __declspec(dllimport)
+#endif
 #endif
