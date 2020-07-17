@@ -274,17 +274,6 @@ class Float4(ctypes.Structure):
     def toTuple(self):
         return float(self.m[0]), float(self.m[1]), float(self.m[2]), float(self.m[3])
 
-    @classmethod
-    def fromValues(cls, *args):
-        instance = cls()
-        for index, arg in enumerate(args):
-            instance.m[index] = arg
-        return instance
-
-    @classmethod
-    def fromScalar(cls, s):
-        return cls((ctypes.c_float * 4)(s, s, s, s))
-
     @property
     def x(self):
         return self.m[0]
