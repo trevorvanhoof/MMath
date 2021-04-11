@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MMath", "MMath\MMath.vcxproj", "{78D888A5-666F-4D6B-B337-375209B4A8AE}"
 EndProject
@@ -11,6 +11,10 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		DLLDebug|x64 = DLLDebug|x64
+		DLLDebug|x86 = DLLDebug|x86
+		DLLRelease|x64 = DLLRelease|x64
+		DLLRelease|x86 = DLLRelease|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -19,6 +23,14 @@ Global
 		{78D888A5-666F-4D6B-B337-375209B4A8AE}.Debug|x64.Build.0 = Debug|x64
 		{78D888A5-666F-4D6B-B337-375209B4A8AE}.Debug|x86.ActiveCfg = Debug|Win32
 		{78D888A5-666F-4D6B-B337-375209B4A8AE}.Debug|x86.Build.0 = Debug|Win32
+		{78D888A5-666F-4D6B-B337-375209B4A8AE}.DLLDebug|x64.ActiveCfg = DLLDebug|x64
+		{78D888A5-666F-4D6B-B337-375209B4A8AE}.DLLDebug|x64.Build.0 = DLLDebug|x64
+		{78D888A5-666F-4D6B-B337-375209B4A8AE}.DLLDebug|x86.ActiveCfg = DLLDebug|Win32
+		{78D888A5-666F-4D6B-B337-375209B4A8AE}.DLLDebug|x86.Build.0 = DLLDebug|Win32
+		{78D888A5-666F-4D6B-B337-375209B4A8AE}.DLLRelease|x64.ActiveCfg = DLLRelease|x64
+		{78D888A5-666F-4D6B-B337-375209B4A8AE}.DLLRelease|x64.Build.0 = DLLRelease|x64
+		{78D888A5-666F-4D6B-B337-375209B4A8AE}.DLLRelease|x86.ActiveCfg = DLLRelease|Win32
+		{78D888A5-666F-4D6B-B337-375209B4A8AE}.DLLRelease|x86.Build.0 = DLLRelease|Win32
 		{78D888A5-666F-4D6B-B337-375209B4A8AE}.Release|x64.ActiveCfg = Release|x64
 		{78D888A5-666F-4D6B-B337-375209B4A8AE}.Release|x64.Build.0 = Release|x64
 		{78D888A5-666F-4D6B-B337-375209B4A8AE}.Release|x86.ActiveCfg = Release|Win32
@@ -27,6 +39,14 @@ Global
 		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.Debug|x64.Build.0 = Debug|x64
 		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.Debug|x86.ActiveCfg = Debug|Win32
 		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.Debug|x86.Build.0 = Debug|Win32
+		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.DLLDebug|x64.ActiveCfg = DLLDebug|x64
+		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.DLLDebug|x64.Build.0 = DLLDebug|x64
+		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.DLLDebug|x86.ActiveCfg = DLLDebug|Win32
+		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.DLLDebug|x86.Build.0 = DLLDebug|Win32
+		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.DLLRelease|x64.ActiveCfg = DLLRelease|x64
+		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.DLLRelease|x64.Build.0 = DLLRelease|x64
+		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.DLLRelease|x86.ActiveCfg = DLLRelease|Win32
+		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.DLLRelease|x86.Build.0 = DLLRelease|Win32
 		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.Release|x64.ActiveCfg = Release|x64
 		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.Release|x64.Build.0 = Release|x64
 		{C342E3B5-2AA2-4D2A-8A42-627A7BB09D19}.Release|x86.ActiveCfg = Release|Win32

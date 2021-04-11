@@ -1083,7 +1083,7 @@ extern "C"
 	{
 		float dx = right - left;
 		float dy = top - bottom;
-		float dz = far - near;
+		float dz = near - far;
 		return { (2.0f * near) / dx, 0.0f, 0.0f, 0.0f,
 			0.0f, (2.0f * near) / dy, 0.0f, 0.0f,
 			(right + left) / dx, (top + bottom) / dy, (far + near) / dz,  -1.0f,
