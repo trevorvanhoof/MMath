@@ -12,7 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 """
 import os
 import ctypes
-import menum as enum
+import MMath.menum as enum
 from math import pi as PI
 
 _instance = None
@@ -61,7 +61,7 @@ def _dll():
     global _instance
     if _instance is not None:
         return _instance
-    _instance = ctypes.WinDLL(os.path.abspath(os.path.join(os.path.abspath(__file__), r'..\x64\Debug\MMath.dll')))
+    _instance = ctypes.WinDLL(os.path.abspath(os.path.join(os.path.abspath(__file__), r'..\x64\DLLRelease\MMath.dll')))
     # Mat44.h
     _instance.Mat44Identity.argtypes = tuple()
     _instance.Mat44Identity.restype = Mat44
@@ -249,16 +249,22 @@ def _dll():
     return _instance
 
 
+_float4 = ctypes.c_float * 4
+
+
 class Float4(ctypes.Structure):
-    _fields_ = [('m', ctypes.c_float * 4)]
+    _fields_ = [('m', _float4)]
 
     def __init__(self, *args):
         if args:
             if len(args) == 1:
-                s = args[0]
-                super(Float4, self).__init__((ctypes.c_float * 4)(s, s, s, s))
+                if isinstance(args[0], Float4):
+                    super(Float4, self).__init__(args[0].m)
+                else:
+                    s = args[0]
+                    super(Float4, self).__init__(_float4(s, s, s, s))
             else:
-                m = (ctypes.c_float * 4)()
+                m = _float4()
                 for i, v in enumerate(args):
                     m[i] = ctypes.c_float(v)
                 super(Float4, self).__init__(m)
@@ -307,16 +313,20 @@ class Float4(ctypes.Structure):
         self.m[3] = v
 
     def __add__(self, rhs):
-        return _dll().VecAdd(self, rhs)
+        return self.__class__(_dll().VecAdd(self, rhs))
 
     def __sub__(self, rhs):
-        return _dll().VecSub(self, rhs)
+        return self.__class__(_dll().VecSub(self, rhs))
 
     def __mul__(self, rhs):
+        return self.__class__(_dll().VecMul(self, rhs))
         return _dll().VecMul(self, rhs)
 
     def __div__(self, rhs):
-        return _dll().VecDiv(self, rhs)
+        return self.__class__(_dll().VecDiv(self, rhs))
+
+    def __neg__(self):
+        return self.__class__(_dll().VecNegate(self))
 
     def min(self, rhs):
         return _dll().VecMin(self, rhs)
@@ -329,9 +339,6 @@ class Float4(ctypes.Structure):
 
     def sign(self):
         return _dll().VecSign(self)
-
-    def negate(self):
-        return _dll().VecNegate(self)
 
     def sin(self):
         return _dll().VecSin(self)
