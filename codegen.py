@@ -10,9 +10,9 @@ dllCode = []
 
 keys = ('Mat44', 'Quat', 'Vector', 'Friends')
 
-for fname in keys:
-    dllCode.append('    # %s.h' % fname)
-    mat44 = os.path.join(os.path.abspath(__file__) + '/../MMath/%s.h' % fname)
+for file_name in keys:
+    dllCode.append('    # %s.h' % file_name)
+    mat44 = os.path.join(os.path.abspath(__file__) + '/../MMath/%s.h' % file_name)
     with open(mat44) as fh:
         code = fh.read()
 
@@ -54,7 +54,7 @@ for fname in keys:
         dllCode.append('    _instance.%s.argtypes = %s' % (funcName, pyArgTypes))
         dllCode.append('    _instance.%s.restype = %s' % (funcName, match.group(1)))
 
-    print '\n'.join(wrapperCode).replace('__m128', 'Float4').replace('from', '_from')
+    print('\n'.join(wrapperCode).replace('__m128', 'Float4').replace('from', '_from'))
     del wrapperCode[:]
 
-print '\n'.join(dllCode).replace('__m128', 'Float4')
+print('\n'.join(dllCode).replace('__m128', 'Float4'))

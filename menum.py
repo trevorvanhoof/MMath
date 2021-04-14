@@ -31,6 +31,8 @@ print EItemType.name(0) # 'Character'
 print EItemType.Character.name() # 'Character'
 """
 from __future__ import absolute_import, print_function
+
+
 # from typing2 import *
 
 
@@ -46,7 +48,7 @@ class EnumMeta(type):
         cls = super(EnumMeta, mcls).__new__(mcls, name, bases, namespace)
         cls._enum = {}
         cls._inverse = {}
-        for key, value in cls.__dict__.iteritems():
+        for key, value in cls.__dict__.items():
             if key.startswith('_'):
                 continue
             if not isinstance(value, classmethod):
@@ -68,12 +70,10 @@ class EnumMeta(type):
         return cls._inverse[value]
 
     def iteritems(cls):
-        return cls._enum.iteritems()
+        return cls._enum.items()
 
 
-class Enum(object):
-    __metaclass__ = EnumMeta
-
+class Enum(object, metaclass=EnumMeta):
     def __init__(self, value):
         assert not isinstance(value, Enum)
         self.value = value
