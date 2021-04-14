@@ -1,4 +1,6 @@
 # TODO
+
+```
 Unit tests
 - Ensure 100% code coverage, currently only testing matrices
 - Do performance metrics by testing tons of randomized inputs
@@ -14,6 +16,7 @@ Quat QuatDelta(Mat44 m, Mat44 newParent) // Get this matrix in the space of the 
 Quat QuatRotate(x,y,z)
 Quat QuatParent(child,parent) TODO: these inputs must reflect multiplication order, so if child * parent yields world space child we're good, but if that is the opposite we must flip the args
 QuatToAxisAngle
+```
 
 # MMath
 MMath - vector math library for 3D applications.
