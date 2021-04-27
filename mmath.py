@@ -313,25 +313,30 @@ class Float4(ctypes.Structure):
         self.m[3] = v
 
     def __add__(self, rhs):
+        if isinstance(rhs, float): rhs = Float4(rhs)
         return self.__class__(_dll().VecAdd(self, rhs))
 
     def __sub__(self, rhs):
+        if isinstance(rhs, float): rhs = Float4(rhs)
         return self.__class__(_dll().VecSub(self, rhs))
 
     def __mul__(self, rhs):
+        if isinstance(rhs, float): rhs = Float4(rhs)
         return self.__class__(_dll().VecMul(self, rhs))
-        return _dll().VecMul(self, rhs)
 
     def __div__(self, rhs):
+        if isinstance(rhs, float): rhs = Float4(rhs)
         return self.__class__(_dll().VecDiv(self, rhs))
 
     def __neg__(self):
         return self.__class__(_dll().VecNegate(self))
 
     def min(self, rhs):
+        if isinstance(rhs, float): rhs = Float4(rhs)
         return _dll().VecMin(self, rhs)
 
     def max(self, rhs):
+        if isinstance(rhs, float): rhs = Float4(rhs)
         return _dll().VecMax(self, rhs)
 
     def abs(self):
