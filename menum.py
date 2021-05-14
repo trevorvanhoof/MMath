@@ -31,9 +31,7 @@ print EItemType.name(0) # 'Character'
 print EItemType.Character.name() # 'Character'
 """
 from __future__ import absolute_import, print_function
-
-
-# from typing2 import *
+from collections import OrderedDict
 
 
 class EnumMeta(type):
@@ -46,8 +44,8 @@ class EnumMeta(type):
         assert len(bases) == 2
         valueConstraint = None if len(bases) == 1 else bases[1]
         cls = super(EnumMeta, mcls).__new__(mcls, name, bases, namespace)
-        cls._enum = {}
-        cls._inverse = {}
+        cls._enum = OrderedDict()
+        cls._inverse = OrderedDict()
         for key, value in cls.__dict__.items():
             if key.startswith('_'):
                 continue

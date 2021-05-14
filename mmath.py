@@ -12,13 +12,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 """
 import os
 import ctypes
-import MMath.menum as enum
+from MMath import menum
 from math import pi as PI
 
 _instance = None
 
 
-class ERotateOrder(enum.Enum, int):
+class ERotateOrder(menum.Enum, int):
     XYZ = 0b000110
     YZX = 0b011000
     ZXY = 0b100001
@@ -31,7 +31,7 @@ class ERotateOrder(enum.Enum, int):
         return ctypes.c_int.from_param(*args)
 
 
-class EAxis(enum.Enum, int):
+class EAxis(menum.Enum, int):
     X = 0b000
     Y = 0b001
     Z = 0b010
@@ -44,7 +44,7 @@ class EAxis(enum.Enum, int):
         return ctypes.c_int.from_param(*args)
 
 
-class Mat44ValidationFlags(enum.Enum, int):
+class Mat44ValidationFlags(menum.Enum, int):
     ValidationOK = 0b00000
     Orthagonal = 0b00001
     Normalized = 0b00010
@@ -279,6 +279,12 @@ class Float4(ctypes.Structure):
 
     def toTuple(self):
         return float(self.m[0]), float(self.m[1]), float(self.m[2]), float(self.m[3])
+
+    def __getitem__(self, item):
+        return self.m[item]
+
+    def __setitem__(self, item, value):
+        self.m[item] = value
 
     @property
     def x(self):
