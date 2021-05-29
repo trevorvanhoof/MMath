@@ -61,7 +61,7 @@ def _dll():
     global _instance
     if _instance is not None:
         return _instance
-    _instance = ctypes.WinDLL(os.path.abspath(os.path.join(os.path.abspath(__file__), r'..\x64\DLLRelease\MMath.dll')))
+    _instance = ctypes.WinDLL(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'x64', 'DLLRelease', 'MMath.dll'))
     # Mat44.h
     _instance.Mat44Identity.argtypes = tuple()
     _instance.Mat44Identity.restype = Mat44
