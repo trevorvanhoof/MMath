@@ -48,7 +48,7 @@
     <ClInclude Include="Friends.h" />
     <ClInclude Include="SIMD.h" />
     <ClInclude Include="Mat44.h" />
-    <ClInclude Include="Math.h" />
+    <ClInclude Include="MMath.h" />
     <ClInclude Include="Quat.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>

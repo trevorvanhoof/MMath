@@ -35,7 +35,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Math.h">
+    <ClInclude Include="MMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mat44.h">

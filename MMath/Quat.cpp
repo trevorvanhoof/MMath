@@ -12,7 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 **/
 #include "Quat.h"
 #include "SIMD.h"
-#include "Math.h"
+#include "MMath.h"
 #include "Vector.h"
 #include "Enums.h"
 #include <math.h>

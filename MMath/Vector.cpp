@@ -12,7 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 **/
 #include "Vector.h"
 
-#include "Math.h"
+#include "MMath.h"
 #include "SIMD.h"
 #include <math.h>
 
