@@ -55,6 +55,8 @@ extern "C"
 		};
 
 		bool operator==(const Mat44& rhs) { return memcmp(m, rhs.m, sizeof(float) * 16) == 0; }
+		Mat44 operator* (const Mat44& rhs);
+		Vec operator* (const __m128& rhs);
 	};
 
 	DLL Mat44 Mat44Identity();

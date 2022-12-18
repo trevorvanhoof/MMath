@@ -271,6 +271,9 @@ class Float4(ctypes.Structure):
         else:
             super(Float4, self).__init__(*args)
 
+    def __hash__(self):
+        return hash((self.x, self.y, self.z, self.w))
+
     def __str__(self):
         return '%.05f, %.05f, %.05f, %.05f' % tuple(self.m)
 

@@ -595,6 +595,9 @@ inline __m128 Det44(const Mat44& inM)
 
 const Mat44 MAT44_IDENTITY = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 
+Mat44 Mat44::operator* (const Mat44& rhs) { return Mat44Mul(*this, rhs); }
+Vec Mat44::operator* (const __m128& rhs) { return Mat44VectorTransform(*this, rhs); }
+
 extern "C"
 {
 
@@ -1079,10 +1082,10 @@ extern "C"
 		// decompose translate
 		return { _mm_mul_ps(F32_VEC3_MASK, m.col3) };
 	}
-	DLL Mat44 Mat44Frustum(const float left, const float right, const float bottom, const float top, const float near, const float far)
+	DLL Mat44 Mat44Frustum(const float left, const float right, const float top, const float bottom, const float near, const float far)
 	{
 		float dx = right - left;
-		float dy = top - bottom;
+		float dy = bottom - top;
 		float dz = near - far;
 		return { (2.0f * near) / dx, 0.0f, 0.0f, 0.0f,
 			0.0f, (2.0f * near) / dy, 0.0f, 0.0f,
@@ -1101,10 +1104,10 @@ extern "C"
 		float halfWidth = halfHeight * aspectRatio;
 		return Mat44Frustum(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
 	}
-	DLL Mat44 Mat44Orthographic(const float left, const float right, const float top, const float bottom, const float near, const float far)
+	DLL Mat44 Mat44Orthographic(const float left, const float right, const float bottom, const float top, const float near, const float far)
 	{
 		float dx = right - left;
-		float dy = top - bottom;
+		float dy = bottom - top;
 		float dz = far - near;
 		float x = (right + left) / dx;
 		float y = (top + bottom) / dy;
